@@ -5,7 +5,7 @@ import shutil
 import pathlib
 from moviepy.editor import VideoFileClip
 
-from flask import render_template, url_for
+from flask import redirect, render_template, url_for, request
 
 from . import bp
 
@@ -14,8 +14,8 @@ from . import bp
 
 
 CLIP_LENGTH_SEC = 30
-MEDIA_DIR = 'snippet_server/static/media'
-USBDRIVE_DIR = 'usbdrive'  # temp
+SERVE_MEDIA_DIR = 'snippet_server/static/media'
+SOURCE_MEDIA_DIR = 'media'
 
 
 """HANDLER FUNCTIONS"""
@@ -23,8 +23,29 @@ USBDRIVE_DIR = 'usbdrive'  # temp
 
 @bp.route('/', methods=['GET', 'POST'])
 def index():
-    image_name = random_image()
-    video_name = random_video_clip()
+    # Get new random image and video clip if it was requested
+    # Then redirect to main so that subsequenty page refreshes
+    # won't also refresh media
+    if request.args.get("refresh_media"):
+        random_image()
+        random_video_clip()
+        return redirect(url_for('main.index'))
+
+    # Get names of all images in static folder
+    static_filenames = [file_name for file_name in os.listdir(SERVE_MEDIA_DIR)]
+    
+    # Get first image in static folder
+    image_name = [
+        static_filename for static_filename in static_filenames
+        if pathlib.Path(static_filename).suffix == ".jpg"
+    ][0]
+
+    # Get first video in static folder
+    video_name = [
+        static_filename for static_filename in static_filenames
+        if pathlib.Path(static_filename).suffix in [".MP4", ".mp4", ".MOV", ".mov"]
+    ][0]
+
 
     return render_template(
         'main/index.html',
@@ -33,49 +54,52 @@ def index():
     )
 
 
+@bp.route('/refresh_media', methods=['GET'])
+def refresh_media():
+    return render_template('main/refresh_media.html')
+
+
 """Private Funtions"""
 
 
 def random_image():
-    """Refresh the random image in the media directory
-    
-    Returns the name of the file created in the media dir
-    """
+    """Refresh the random image in the media directory"""
     # Remove any old movie phots in the media dir
-    for file in os.listdir(MEDIA_DIR):
+    for file in os.listdir(SERVE_MEDIA_DIR):
         if file.endswith(".jpg"):
-            os.remove(os.path.join(MEDIA_DIR, file))
+            os.remove(os.path.join(SERVE_MEDIA_DIR, file))
 
     # Get all image file choices
     image_choices = []
-    for filename in glob.iglob('usbdrive/**/*.jpg', recursive=True):
+    for filename in glob.iglob(f'{SOURCE_MEDIA_DIR}/**/*.jpg', recursive=True):
         image_choices.append(os.path.abspath(filename))
 
     # Choose one of the phots
     image_path = random.choice(image_choices)
 
     # Copy the image to the media dir
-    shutil.copy(image_path, MEDIA_DIR)
-
-    return os.path.basename(image_path)
+    shutil.copy(image_path, SERVE_MEDIA_DIR)
 
 
 def random_video_clip():
-    """Refresh the random video clip in the media directory
-    
-    Returns the name of the file created in the media dir
-    """
+    """Refresh the random video clip in the media directory"""
     # Remove any old movie files in the media dir
-    for file in os.listdir(MEDIA_DIR):
-        if file.endswith(".MP4") or file.endswith(".mov"):
-            os.remove(os.path.join(MEDIA_DIR, file))
+    for file in os.listdir(SERVE_MEDIA_DIR):
+        if file.endswith(".MP4") or file.endswith(".mp4") or file.endswith(".MOV") or file.endswith(".mov") :
+            os.remove(os.path.join(SERVE_MEDIA_DIR, file))
 
     # Get all movie file choices
     video_choices = []
-    for filename in glob.iglob(f'{USBDRIVE_DIR}/**/*.MP4', recursive=True):
+    for filename in glob.iglob(f'{SOURCE_MEDIA_DIR}/**/*.MP4', recursive=True):
         video_choices.append(os.path.abspath(filename))
 
-    for filename in glob.iglob(f'{USBDRIVE_DIR}/**/*.mov', recursive=True):
+    for filename in glob.iglob(f'{SOURCE_MEDIA_DIR}/**/*.mp4', recursive=True):
+        video_choices.append(os.path.abspath(filename))
+
+    for filename in glob.iglob(f'{SOURCE_MEDIA_DIR}/**/*.MOV', recursive=True):
+        video_choices.append(os.path.abspath(filename))
+
+    for filename in glob.iglob(f'{SOURCE_MEDIA_DIR}/**/*.mov', recursive=True):
         video_choices.append(os.path.abspath(filename))
 
     # Choose one of the videos
@@ -85,13 +109,11 @@ def random_video_clip():
     video_clip = VideoFileClip(video_path)
     video_clip_name = ""
     if video_clip.duration <= CLIP_LENGTH_SEC:
-        shutil.copy(video_path, MEDIA_DIR)
+        shutil.copy(video_path, SERVE_MEDIA_DIR)
         video_clip_name = os.path.basename(video_path)
     else:
         start = random.randint(0, int(video_clip.duration) - CLIP_LENGTH_SEC)
         end = start + CLIP_LENGTH_SEC
         clip = video_clip.subclip(start, end)
         video_clip_name = f"{pathlib.Path(video_path).stem}_{start}_{end}.MP4"
-        clip.write_videofile(os.path.join(MEDIA_DIR, video_clip_name))
-
-    return video_clip_name
+        clip.write_videofile(os.path.join(SERVE_MEDIA_DIR, video_clip_name))

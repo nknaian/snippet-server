@@ -18,3 +18,4 @@ A server that displays random photos and small selections of videos from a given
     export FLASK_ENV=development
     ```
     - **note**: The sqlite database will be created at the path you specify upon the first run of the site.
+- Place video and image files inside of the 'media' directoroy. Files can be nested into directories.
