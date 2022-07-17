@@ -2,3 +2,7 @@ penv
 .env
 __pycache__/
 *.jpg
+static/media/*.jpg
+static/media/*.MP4
+static/media/*.mov
+usbdrive/
