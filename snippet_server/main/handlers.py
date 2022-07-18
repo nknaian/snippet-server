@@ -8,7 +8,6 @@ from moviepy.editor import VideoFileClip
 from flask import redirect, render_template, url_for, request
 
 from . import bp
-from .decorators import mount_media
 
 
 """CONSTANTS"""
@@ -28,7 +27,8 @@ def index():
     # Then redirect to main so that subsequenty page refreshes
     # won't also refresh media
     if request.args.get("refresh_media"):
-        random_media()
+        random_image()
+        random_video_clip()
         return redirect(url_for('main.index'))
 
     # Get names of all images in static folder
@@ -66,12 +66,6 @@ def refresh_media():
 
 
 """Private Funtions"""
-
-@mount_media
-def random_media():
-    """Refresh media, mounting and unmounting storage if necessary"""
-    random_image()
-    random_video_clip()
 
 
 def random_image():
