@@ -31,8 +31,10 @@ def refresh_media():
     Schedule to occur once a day at 1am
     """
     with scheduler.app.app_context():
+        print("Refreshing media...")
         random_image()
         random_video_clip()
+        print("Done refreshing media.")
 
 
 '''HELPER FUNCTIONS'''
@@ -40,7 +42,7 @@ def refresh_media():
 
 def random_image():
     """Refresh the random image in the media directory"""
-    # Remove any old movie phots in the media dir
+    # Remove any old movie photos in the media dir
     for file in os.listdir('snippet_server/static/media'):
         if file.endswith(".jpg"):
             os.remove(os.path.join('snippet_server/static/media', file))
