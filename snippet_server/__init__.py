@@ -22,8 +22,6 @@ def create_app():
     # Initialize scheduler and start background tasks
     scheduler.init_app(app)
 
-    print("hello?1")
-
     from snippet_server.main import background_tasks
     scheduler.start()
 
