@@ -21,14 +21,14 @@ SOURCE_MEDIA_DIR = 'media'
 @scheduler.task(
     "cron",
     id="refresh_media",
-    hour="1",
+    hour="0",
     minute="0",
     max_instances=1
 )
 def refresh_media():
     """Update the image and video displayed on the page
 
-    Schedule to occur once a day at 1am
+    Schedule to occur once a day at 12am
     """
     with scheduler.app.app_context():
         print("Refreshing media...")
