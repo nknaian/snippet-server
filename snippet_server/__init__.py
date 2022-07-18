@@ -3,7 +3,6 @@ import random
 import time
 
 from flask import Flask
-from flask_bootstrap import Bootstrap5
 
 from .config import Config
 
@@ -20,8 +19,5 @@ def create_app():
     # Register blueprints
     from snippet_server.main import bp as main_bp
     app.register_blueprint(main_bp)
-
-    # Create bootstrap flask app
-    Bootstrap5(app)
 
     return app
