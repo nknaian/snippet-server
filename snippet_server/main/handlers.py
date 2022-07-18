@@ -77,7 +77,7 @@ def random_image():
 
     # Get all image file choices
     image_choices = []
-    for filename in glob.iglob(f'{SOURCE_MEDIA_DIR}/**/*.jpg', recursive=True):
+    for filename in glob.iglob("{}/**/*.jpg".format(SOURCE_MEDIA_DIR), recursive=True):
         image_choices.append(os.path.abspath(filename))
 
     # Choose one of the phots
@@ -96,16 +96,16 @@ def random_video_clip():
 
     # Get all movie file choices
     video_choices = []
-    for filename in glob.iglob(f'{SOURCE_MEDIA_DIR}/**/*.MP4', recursive=True):
+    for filename in glob.iglob("{}/**/*.MP4".format(SOURCE_MEDIA_DIR), recursive=True):
         video_choices.append(os.path.abspath(filename))
 
-    for filename in glob.iglob(f'{SOURCE_MEDIA_DIR}/**/*.mp4', recursive=True):
+    for filename in glob.iglob("{}/**/*.mp4".format(SOURCE_MEDIA_DIR), recursive=True):
         video_choices.append(os.path.abspath(filename))
 
-    for filename in glob.iglob(f'{SOURCE_MEDIA_DIR}/**/*.MOV', recursive=True):
+    for filename in glob.iglob("{}/**/*.MOV".format(SOURCE_MEDIA_DIR), recursive=True):
         video_choices.append(os.path.abspath(filename))
 
-    for filename in glob.iglob(f'{SOURCE_MEDIA_DIR}/**/*.mov', recursive=True):
+    for filename in glob.iglob("{}/**/*.mov".format(SOURCE_MEDIA_DIR), recursive=True):
         video_choices.append(os.path.abspath(filename))
 
     # Choose one of the videos
@@ -121,5 +121,5 @@ def random_video_clip():
         start = random.randint(0, int(video_clip.duration) - CLIP_LENGTH_SEC)
         end = start + CLIP_LENGTH_SEC
         clip = video_clip.subclip(start, end)
-        video_clip_name = f"{pathlib.Path(video_path).stem}_{start}_{end}.MP4"
+        video_clip_name = "{}_{}_{}.MP4".format(pathlib.Path(video_path).stem, start, end)
         clip.write_videofile(os.path.join(SERVE_MEDIA_DIR, video_clip_name))
