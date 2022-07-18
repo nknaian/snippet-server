@@ -13,7 +13,6 @@ A server that displays random photos and small selections of videos from a given
 - Create a file named *.env* at the root of your repo, and put in the following export commands
   (replacing placeholder values with your own values):
     ```bash
-    export FLASK_SECRET_KEY="insert-your-secret-key"
     export FLASK_APP=albumcollections
     export FLASK_ENV=development
     ```

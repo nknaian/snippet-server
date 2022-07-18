@@ -3,4 +3,6 @@ import os
 
 class Config(object):
     """Config base class"""
-    SECRET_KEY = os.environ.get('FLASK_SECRET_KEY') or 'you-will-never-guess'
+    CACHE_TYPE = 'FileSystemCache'
+    CACHE_DIR = './.flask_caching/'
+    CACHE_DEFAULT_TIMEOUT = 0

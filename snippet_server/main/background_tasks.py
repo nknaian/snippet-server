@@ -3,9 +3,10 @@ import glob
 import random
 import shutil
 import pathlib
+import datetime
 from moviepy.editor import VideoFileClip
 
-from snippet_server import scheduler
+from snippet_server import cache, scheduler
 
 
 '''CONSTANTS'''
@@ -34,6 +35,7 @@ def refresh_media():
         print("Refreshing media...")
         random_image()
         random_video_clip()
+        cache.set("refresh_media_datetime", str(datetime.datetime.now()))
         print("Done refreshing media.")
 
 

@@ -3,6 +3,8 @@ import pathlib
 
 from flask import render_template
 
+from snippet_server import cache
+
 from . import bp
 
 
@@ -36,7 +38,8 @@ def index():
     return render_template(
         'main/index.html',
         image_name=image_name,
-        video_name=video_name
+        video_name=video_name,
+        refresh_media_datetime=cache.get("refresh_media_datetime")
     )
 
 
