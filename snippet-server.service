@@ -1,8 +1,0 @@
-[Unit]
-Description=Service to run snippet-server flask server at startup
-
-[Service]
-ExecStart=/usr/local/bin/snippet_server.sh
-
-[Install]
-WantedBy=multi-user.target
