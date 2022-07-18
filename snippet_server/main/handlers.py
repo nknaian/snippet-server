@@ -35,16 +35,22 @@ def index():
     static_filenames = [file_name for file_name in os.listdir(SERVE_MEDIA_DIR)]
     
     # Get first image in static folder
-    image_name = [
-        static_filename for static_filename in static_filenames
-        if pathlib.Path(static_filename).suffix == ".jpg"
-    ][0]
+    try:
+        image_name = [
+            static_filename for static_filename in static_filenames
+            if pathlib.Path(static_filename).suffix == ".jpg"
+        ][0]
+    except IndexError:
+        image_name = None
 
     # Get first video in static folder
-    video_name = [
-        static_filename for static_filename in static_filenames
-        if pathlib.Path(static_filename).suffix in [".MP4", ".mp4", ".MOV", ".mov"]
-    ][0]
+    try:
+        video_name = [
+            static_filename for static_filename in static_filenames
+            if pathlib.Path(static_filename).suffix in [".MP4", ".mp4", ".MOV", ".mov"]
+        ][0]
+    except IndexError:
+        video_name = None
 
 
     return render_template(
@@ -80,11 +86,12 @@ def random_image():
     for filename in glob.iglob("{}/**/*.jpg".format(SOURCE_MEDIA_DIR), recursive=True):
         image_choices.append(os.path.abspath(filename))
 
-    # Choose one of the phots
-    image_path = random.choice(image_choices)
+    if len(image_choices):
+        # Choose one of the phots
+        image_path = random.choice(image_choices)
 
-    # Copy the image to the media dir
-    shutil.copy(image_path, SERVE_MEDIA_DIR)
+        # Copy the image to the media dir
+        shutil.copy(image_path, SERVE_MEDIA_DIR)
 
 
 def random_video_clip():
@@ -108,18 +115,19 @@ def random_video_clip():
     for filename in glob.iglob("{}/**/*.mov".format(SOURCE_MEDIA_DIR), recursive=True):
         video_choices.append(os.path.abspath(filename))
 
-    # Choose one of the videos
-    video_path = random.choice(video_choices)
+    if len(video_choices):
+        # Choose one of the videos
+        video_path = random.choice(video_choices)
 
-    # Copy a 30 second (or less) clip from the chosen video to the media folder
-    video_clip = VideoFileClip(video_path)
-    video_clip_name = ""
-    if video_clip.duration <= CLIP_LENGTH_SEC:
-        shutil.copy(video_path, SERVE_MEDIA_DIR)
-        video_clip_name = os.path.basename(video_path)
-    else:
-        start = random.randint(0, int(video_clip.duration) - CLIP_LENGTH_SEC)
-        end = start + CLIP_LENGTH_SEC
-        clip = video_clip.subclip(start, end)
-        video_clip_name = "{}_{}_{}.MP4".format(pathlib.Path(video_path).stem, start, end)
-        clip.write_videofile(os.path.join(SERVE_MEDIA_DIR, video_clip_name))
+        # Copy a 30 second (or less) clip from the chosen video to the media folder
+        video_clip = VideoFileClip(video_path)
+        video_clip_name = ""
+        if video_clip.duration <= CLIP_LENGTH_SEC:
+            shutil.copy(video_path, SERVE_MEDIA_DIR)
+            video_clip_name = os.path.basename(video_path)
+        else:
+            start = random.randint(0, int(video_clip.duration) - CLIP_LENGTH_SEC)
+            end = start + CLIP_LENGTH_SEC
+            clip = video_clip.subclip(start, end)
+            video_clip_name = "{}_{}_{}.MP4".format(pathlib.Path(video_path).stem, start, end)
+            clip.write_videofile(os.path.join(SERVE_MEDIA_DIR, video_clip_name))

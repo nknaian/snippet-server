@@ -47,44 +47,47 @@
 </div>
 
 <!-- Image popup window-->
-<div id="imageViewModal" class="modal fade" tabindex="-1" aria-labelledby="imageViewModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="imageViewModalLabel">{{image_name}}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="d-flex justify-content-center">
-                    <img
-                        class="img-fluid"
-                        src="{{url_for('static', filename='media/' + image_name)}}"
-                    >
+{% if image_name %}
+    <div id="imageViewModal" class="modal fade" tabindex="-1" aria-labelledby="imageViewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="imageViewModalLabel">{{image_name}}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex justify-content-center">
+                        <img
+                            class="img-fluid"
+                            src="{{url_for('static', filename='media/' + image_name)}}"
+                        >
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+{% endif %}
 
 <!-- Video popup window-->
-<div id="videoViewModal" class="modal fade" tabindex="-1" aria-labelledby="videoViewModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="videoViewModalLabel">{{video_name}}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="d-flex justify-content-center">
-                    <video controls class="img-fluid">
-                        <source src="{{url_for('static', filename='media/' + video_name)}}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
+{% if video_name %}
+    <div id="videoViewModal" class="modal fade" tabindex="-1" aria-labelledby="videoViewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="videoViewModalLabel">{{video_name}}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+                <div class="modal-body">
+                    <div class="d-flex justify-content-center">
+                        <video controls class="img-fluid">
+                            <source src="{{url_for('static', filename='media/' + video_name)}}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
+                <!-- TODO: Would be nice to be able to click a button to view the whole video  -->
             </div>
-            <!-- TODO: Would be nice to be able to click a button to view the whole video  -->
         </div>
     </div>
-</div>
-
+{% endif %}
 {% endblock %}
