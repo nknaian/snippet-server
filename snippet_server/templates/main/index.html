@@ -63,6 +63,16 @@
                         >
                     </div>
                 </div>
+                <div class="modal-footer">
+                    <a
+                        class="btn btn-primary" 
+                        role="button"
+                        href="{{url_for('static', filename='media/' + image_name)}}"
+                        download
+                    >
+                        Download
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -84,6 +94,16 @@
                             Your browser does not support the video tag.
                         </video>
                     </div>
+                </div>
+                <div class="modal-footer">
+                    <a
+                        class="btn btn-primary" 
+                        role="button"
+                        href="{{url_for('static', filename='media/' + video_name)}}"
+                        download
+                    >
+                        Download
+                    </a>
                 </div>
                 <!-- TODO: Would be nice to be able to click a button to view the whole video  -->
             </div>

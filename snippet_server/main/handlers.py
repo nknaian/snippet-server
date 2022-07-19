@@ -13,7 +13,7 @@ from . import bp
 
 @bp.route('/', methods=['GET', 'POST'])
 def index():
-    # Get names of all images in static folder
+    # Get names of all images in static media folder
     static_filenames = [file_name for file_name in os.listdir('snippet_server/static/media')]
     
     # Get first image in static folder
