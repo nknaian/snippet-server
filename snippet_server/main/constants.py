@@ -1,0 +1,1 @@
+VIDEO_EXTENSIONS = [".MP4", ".mp4", ".MOV", ".mov", ".m4v", ".M4V"]

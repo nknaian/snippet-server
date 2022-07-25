@@ -6,6 +6,7 @@ from flask import render_template
 from snippet_server import cache
 
 from . import bp
+from .constants import VIDEO_EXTENSIONS
 
 
 """HANDLER FUNCTIONS"""
@@ -29,7 +30,7 @@ def index():
     try:
         video_name = [
             static_filename for static_filename in static_filenames
-            if pathlib.Path(static_filename).suffix in [".MP4", ".mp4", ".MOV", ".mov"]
+            if pathlib.Path(static_filename).suffix in VIDEO_EXTENSIONS
         ][0]
     except IndexError:
         video_name = None

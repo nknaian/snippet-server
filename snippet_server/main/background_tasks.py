@@ -8,6 +8,7 @@ from moviepy.editor import VideoFileClip
 
 from snippet_server import cache, scheduler
 
+from .constants import VIDEO_EXTENSIONS
 
 '''CONSTANTS'''
 
@@ -66,22 +67,15 @@ def random_video_clip():
     """Refresh the random video clip in the media directory"""
     # Remove any old movie files in the media dir
     for file in os.listdir('snippet_server/static/media'):
-        if file.endswith(".MP4") or file.endswith(".mp4") or file.endswith(".MOV") or file.endswith(".mov") :
-            os.remove(os.path.join('snippet_server/static/media', file))
+        for ext in VIDEO_EXTENSIONS:
+            if file.endswith(ext):
+                os.remove(os.path.join('snippet_server/static/media', file))
 
     # Get all movie file choices
     video_choices = []
-    for filename in glob.iglob("{}/**/*.MP4".format(SOURCE_MEDIA_DIR), recursive=True):
-        video_choices.append(os.path.abspath(filename))
-
-    for filename in glob.iglob("{}/**/*.mp4".format(SOURCE_MEDIA_DIR), recursive=True):
-        video_choices.append(os.path.abspath(filename))
-
-    for filename in glob.iglob("{}/**/*.MOV".format(SOURCE_MEDIA_DIR), recursive=True):
-        video_choices.append(os.path.abspath(filename))
-
-    for filename in glob.iglob("{}/**/*.mov".format(SOURCE_MEDIA_DIR), recursive=True):
-        video_choices.append(os.path.abspath(filename))
+    for ext in VIDEO_EXTENSIONS:
+        for filename in glob.iglob("{}/**/*{}".format(SOURCE_MEDIA_DIR, ext), recursive=True):
+            video_choices.append(os.path.abspath(filename))
 
     if len(video_choices):
         # Choose one of the videos
